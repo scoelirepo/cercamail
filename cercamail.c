@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern int findpid(char *,char **);
+extern int findpid(char *,char *);
 extern int pushpid(int);
 extern int poppid(int);
 
@@ -12,8 +12,8 @@ int main(int argc, char *argv[]) {
 
     FILE *fp,*fp1;
     char *log_line = NULL; //la linea in input
-    char session_id[20];
-    char *position, *found_session, *found_amavis_session, *session_pid, *found_pid="1"; // per la stringa da cercare
+    char session_id[20], session_pid[10];
+    char *position, *found_session, *found_amavis_session, *found_pid="1"; // per la stringa da cercare
     char amavis_id[20] ={"VUOTO"};
     size_t len = 0; // boh!
     ssize_t read;  // dimensione stringa letta
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
         if ( strstr(log_line,"dovecot") || strstr(log_line,"postfix/smtpd") || strstr(log_line,"postfix/smtps/smtpd") || strstr(log_line,"postfix/submission/smtpd") )
         {
                 // restituisce il pid cercato
-                status=findpid(log_line,&session_pid);
+                status=findpid(log_line,session_pid);
                 if (! status )
                 {
                         printf("sessione postfix trovata ma pid non estraibile\n");

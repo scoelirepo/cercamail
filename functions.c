@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 
-int findpid(char *logline, char **ilpid )
+int findpid(char *logline, char *ilpid )
 {
         char *stringa_da_verificare;
         char *token;
@@ -22,7 +22,7 @@ int findpid(char *logline, char **ilpid )
                 free(stringa_da_verificare);
                 return 0;
         }
-        printf ("debug: primo token %s\n",token);
+        printf ("debug: primo token: \"%s\"\n",token);
 
 
         if((token = strtok(NULL, delimitatori))==NULL) {
@@ -30,10 +30,17 @@ int findpid(char *logline, char **ilpid )
                 free(stringa_da_verificare);
                 return 0;
         }
-        printf ("debug: questo est secondo token che deve essere il pid %s\n",token);
+
+
+        // copio il token nella stringa ilpid
+        strncpy(ilpid, token, sizeof(ilpid) - 1);
+        ilpid[sizeof(ilpid) - 1] = '\0';
+
+        printf ("debug: il secondo token che deve essere il pid: \"%s\"\n",token);
 
         // copio il token nella stringa preparata nel main usando il suo puntatore
-        strcpy(token,*ilpid);
+
+
 
         free(stringa_da_verificare);
         return 1;

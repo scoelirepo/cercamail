@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
         // stampo se trovo la sessione mail o quella amavis
         found_session = strstr(log_line, session_id);
         found_amavis_session = strstr(log_line, amavis_id);
-        found_pid = strstr(log_line, amavis_id);
+        found_pid = strstr(log_line, session_pid);
 
         if ( (found_session!=NULL) || (found_amavis_session!=NULL)||(found_pid!=NULL))
                 printf("OUTPUT: %s", log_line);

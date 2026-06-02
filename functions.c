@@ -2,6 +2,40 @@
 #include <string.h>
 #include <stdlib.h>
 
+typedef struct {
+	char *sessionpid;
+	void *nextelement;
+	void *prevelement;
+} mystack;
+
+mystack *stackpointer=NULL,*stackroot=NULL;
+
+int pushpid(char *ilpid)
+{
+	if (! stackpointer )
+	{	
+		stackpointer=malloc(sizeof(mystack));	
+		stackroot=stackpointer;
+		stackpointer->sessionpid=strdup(ilpid);
+		stackpointer->nextelement=NULL;
+		stackpointer->prevelement=NULL;
+	}
+	else
+	{
+		stackpointer->nextelement=malloc(sizeof(mystack));
+
+		// CHE COSA NON VA ?  *(mystack)(stackpointer->nextelement).sessionpid=strdup(ilpid);
+
+		stackpointer->prevelement=stackpointer;
+		stackpointer=stackpointer->nextelement;
+	}
+}
+
+int poppid(char *ilpid)
+{
+	return 0;
+}
+
 
 int findpid(char *logline, char *ilpid )
 {
@@ -46,14 +80,3 @@ int findpid(char *logline, char *ilpid )
         return 1;
 }
 
-
-int pushpid(int pid)
-{
-        return 0 ;
-}
-
-
-int poppid(int pid)
-{
-        return 0 ;
-}

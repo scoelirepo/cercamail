@@ -4,9 +4,9 @@
 #include <stdlib.h>
 
 extern int findpid(char *,char *);
-extern int pushpid(int);
-extern int poppid(int);
-
+extern int pushpid(char *);
+extern int poppid(char *);
+extern char *stack;
 
 int main(int argc, char *argv[]) {
 

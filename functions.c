@@ -10,7 +10,7 @@ typedef struct {
 
 mystack *stackpointer=NULL,*stackroot=NULL;
 
-int pushpid(char *ilpid)
+int addpid(char *ilpid)
 {
 	if (! stackpointer )
 	{	
@@ -31,7 +31,7 @@ int pushpid(char *ilpid)
 	}
 }
 
-int poppid(char *ilpid)
+int delpid(char *ilpid)
 {
 	return 0;
 }

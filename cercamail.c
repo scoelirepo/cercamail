@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 extern int findpid(char *,char *);
-extern int pushpid(char *);
-extern int poppid(char *);
+extern int addpid(char *);
+extern int delpid(char *);
 extern char *stack;
 
 int main(int argc, char *argv[]) {
@@ -63,22 +63,24 @@ int main(int argc, char *argv[]) {
                 else
                 printf ("%s  >>>>>>  pid ==>>>>>  %s\n", log_line, session_pid);
 
-                if ( strstr(log_line," connect from" ) )
+                if ( strstr(log_line," connect from" )!=NULL )
+		{
                         //  se apertura sessione allora push del pid, se ok restituisce 0
                         printf("eseguo push di %s\n", session_pid);
-                        /* actionpid=pushpid(session_pid); */
+                        actionpid=addpid(session_pid);
+		}
 
-                if ( strstr(log_line," disconnect from" ) )
+                if ( strstr(log_line," disconnect from" )!=NULL )
                 {
                         // pop del pid, se ok restituisce 0, se l'apertura non esiste restituisce 2
                         printf("eseguo pop di %s\n", session_pid);
-                        /* actionpid=poppid(session_pid);*/
+                        actionpid=delpid(session_pid);
                 }
         }
 
 
         // ==>> ora bisogna cercare un pid non chiuso seguito da session_id, quello è il pid voluto
-        // altro todo preparare le funzioni pushpid e poppid
+        // altro todo preparare le funzioni addpid e delpid
 
 
 

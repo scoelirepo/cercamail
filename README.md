@@ -29,23 +29,36 @@ quello è il pid che dovrà essere usato per visualizzare la linea di chiusura c
 
 
 
- --   primo giro
- <> leggo linea log_line
-         ==> contiene la stringa di sessione ? 
-            ==> se si, contiene anche sessione amavis ?
+--   primo giro
+[] leggo linea log_line
+    <> contiene " connect from" ?
+        ==> salvo il pid relativo nella lista
+    <> contiene la stringa di sessione ? 
+        ==> se si 
+            <> contiene anche sessione amavis ?
                 ==> se si, salvo amavis_id
-            la stringa di sessione contenuta in log_line contiene anche un pid e soddisfa le condizioni di inizio sessione ( vedi sotto )?
-                ==> se si, verifico se il pid è in lista, se c'è allora è quello il pid da usare per cercare la chiusura connessione, se no errore
+            <> contiene uno dei pid in lista ?
+                ==> se si, salvo il pid in session_pid e la linea in session_pid_line
+    <> session_pid è valorizzato e ho trovato una linea che lo contiene e contiene " disconnect from" ?
+        ==> se si, la ricerca nel file è finita
 
-      contiene una stringa di inizio connessione ?  " connect from"
-           ==> se si, estraggo pid e lo salvo nella lista
-      contiene stringa di fine connessione ? " disconnect from"
-           ==> se si, estraggo pid e lo elimino dalla lista se vi esiste
+
 
  
 -- secondo giro
+==> output di session_pid_line
+[] leggo linea log_line
+    <> contiene la stringa di sessione o pid ? 
+        ==> output linea
+        ==> session_started = true
+    <> contiene disconnect from e il pid ?
+        <> session started == true ?
+            ==> si, output linea e chiusura
+        
+        
  
-  condizioni di inizio sessione : if ( strstr(log_line,"dovecot") || 
+  *condizioni di inizio sessione*
+  if ( strstr(log_line,"dovecot") || 
   strstr(log_line,"postfix/smtpd") || 
   strstr(log_line,"postfix/smtps/smtpd") || 
   strstr(log_line,"postfix/submission/smtpd") )

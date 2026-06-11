@@ -1,6 +1,7 @@
 # Compiler and flags
 CC = gcc
-CFLAGS = -Wall -Wextra -g -Wunused-but-set-variable
+CFLAGS = -g
+# DEBUG  CFLAGS = -Wall -Wextra -g -Wunused-but-set-variable
 
 # Target executable name
 TARGET = cercamail

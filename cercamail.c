@@ -2,9 +2,10 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 extern int add_pid_to_list(char *,char *);
-extern int get_pid(char **,char **);
+extern int get_pid(char *,char *);
 extern int remove_pid_from_list(char *);
 extern int is_pid_in_list(char *);
 extern char * get_pid_from_list(char *); // usare strdup 
@@ -17,9 +18,16 @@ int main(int argc, char *argv[]) {
 
 	FILE *fp,*fp1;
 	char *log_line = NULL; //la linea in input
-	char session_id[20], session_pid[10], amavis_id[20], *session_pid_line=NULL, *close_session_line;
-
-	char *position, *found_session, *found_amavis_session, *found_pid="1"; // per la stringa da cercare
+	char 	session_id[20],  // id sessione esad
+		session_pid[20], // pid found in first line 
+		amavis_id[20], 
+		*session_pid_line, 
+		*close_session_line,
+		*position, 
+		*found_session, 
+		*found_amavis_session, 
+		*found_pid_session, 
+		found_pid[20]; 
 	size_t len = 0; // boh!
 	ssize_t read;  // dimensione stringa letta
 
@@ -77,10 +85,10 @@ int main(int argc, char *argv[]) {
 
 		if ( strstr(log_line," connect from") )
 		{
-			if ( get_pid(&log_line,&found_pid) )
+			if ( get_pid(log_line,found_pid) == false )
 				printf("warning: found connect from but cannot extract pid\n");
 			else
-				if( add_pid_to_list(found_pid,log_line) )
+				if( add_pid_to_list(found_pid,log_line) == false )
 				{
 					printf("error: cannot add the pid to the list\n");
 					exit(-1);
@@ -89,18 +97,18 @@ int main(int argc, char *argv[]) {
 					printf("DEBUG added pid %s\n",found_pid);
 		}
 
-	// ==> Se trovo una stringa che contiene la sessione
+		// ==> Se trovo una stringa che contiene la sessione
 		if ( strstr(log_line,session_id)!=NULL )
 		{
-			if ( get_pid(&log_line,&found_pid) )
+			if ( get_pid(log_line,found_pid) == false )
 				printf("warning: found connect from but cannot extract pid\n");
 			else
 			{
-				if ( is_pid_in_list(found_pid) )
+				if ( is_pid_in_list(found_pid) == true )
 				{
 					printf("trovato pid e sessione\n");
 					strcpy(session_pid,found_pid);
-					strcpy(session_pid_line,log_line);
+					session_pid_line=strdup(log_line);
 				}
 			}		
 	
@@ -118,10 +126,10 @@ int main(int argc, char *argv[]) {
 		}
 	
 	
-		//  ==> Se trovo una stringa che contiene la sessione
+		//  ==> Se trovo una stringa che contiene la disconnect 
 		if ( strstr(log_line," disconnect from")!=NULL )
 		{
-			if ( get_pid(&log_line,&found_pid) )
+			if ( get_pid(log_line,found_pid) == false )
 				printf("warning: found disconnect from but cannot extract pid\n");
 			else
 				if(session_pid!=NULL && strcmp(session_pid,found_pid)==0)
@@ -131,7 +139,7 @@ int main(int argc, char *argv[]) {
 					fseek(fp,0,SEEK_END);
 				}
 				else
-					if ( remove_pid_from_list(found_pid) )
+					if ( remove_pid_from_list(found_pid) == false )
 					{
 						printf("error: cannot remove the pid to the list\n");
 						exit(-1);
@@ -162,9 +170,9 @@ int main(int argc, char *argv[]) {
 	    // stampo se trovo la sessione mail o quella amavis
 	    found_session = strstr(log_line, session_id);
 	    found_amavis_session = strstr(log_line, amavis_id);
-	    found_pid = strstr(log_line, session_pid);
+	    found_pid_session = strstr(log_line, session_pid);
 
-	    if ( (found_session!=NULL) || (found_amavis_session!=NULL)||(found_pid!=NULL))
+	    if ( (found_session!=NULL) || (found_amavis_session!=NULL)||(found_pid_session!=NULL))
 	            printf("OUTPUT: %s", log_line);
 	}
 

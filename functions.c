@@ -2,15 +2,37 @@
 #include <string.h>
 #include <stdlib.h>
 
-typedef struct {
-	char *sessionpid;
-	void *nextelement;
-	void *prevelement;
-} mystack;
+
+int add_pid_to_list(char *,char *)
+{ return 0;
+};
+
+int get_pid(char **,char **)
+{ return 0;
+};
+
+int remove_pid_from_list(char *)
+{ return 0;
+};
+
+int is_pid_in_list(char *)
+{ return 0;
+};
+
+char * get_pid_from_list(char *) // usare strdup
+{
+	return NULL;
+}
+
+char *pid_stack;
+
+
+
+/*
 
 mystack *stackpointer=NULL,*stackroot=NULL;
 
-int addpid(char *ilpid)
+int add_pid(char *ilpid)
 {
 	if (! stackpointer )
 	{	
@@ -80,3 +102,4 @@ int findpid(char *logline, char *ilpid )
         return 1;
 }
 
+*/

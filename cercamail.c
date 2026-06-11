@@ -21,8 +21,8 @@ int main(int argc, char *argv[]) {
 	char 	session_id[20],  // id sessione esad
 		session_pid[20], // pid found in first line 
 		amavis_id[20], 
-		*session_pid_line, 
-		*close_session_line,
+		*start_pid_session_line, 
+		*close_pid_session_line="ULTIMA LINEA disconnect from etc",
 		*position, 
 		*found_session, 
 		*found_amavis_session, 
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
 //	<> contiene la stringa di sessione ?
 //		==> se si
 //			<> contiene uno dei pid aperti ?
-//				==> se si, quello è il pid, lo salvo in session_pid e la linea relativa in session_pid_line 
+//				==> se si, quello è il pid, lo salvo in session_pid e la linea relativa in start_pid_session_line 
 //			<> contiene anche sessione amavis ?
 //				==> se si, lo salvo amavis_id
 //	<> contiene " disconnect from" ?
@@ -93,8 +93,8 @@ int main(int argc, char *argv[]) {
 					printf("error: cannot add the pid to the list\n");
 					exit(-1);
 				}
-				else
-					printf("DEBUG added pid %s\n",found_pid);
+				//else
+				//	printf("DEBUG added pid %s\n",found_pid);
 		}
 
 		// ==> Se trovo una stringa che contiene la sessione
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
 				{
 					printf("trovato pid e sessione\n");
 					strcpy(session_pid,found_pid);
-					session_pid_line=strdup(log_line);
+					start_pid_session_line=strdup(log_line);
 				}
 			}		
 	
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
 				if(session_pid!=NULL && strcmp(session_pid,found_pid)==0)
 				{
 					printf("Trovato chiusura pid con foundpid - esco loop 1 \n");
-					close_session_line=strdup(log_line);
+					close_pid_session_line=strdup(log_line);
 					fseek(fp,0,SEEK_END);
 				}
 				else
@@ -144,8 +144,8 @@ int main(int argc, char *argv[]) {
 						printf("error: cannot remove the pid to the list\n");
 						exit(-1);
 					}
-					else
-						printf("DEBUG removed pid %s\n",found_pid);
+					//else
+						//printf("DEBUG removed pid %s\n",found_pid);
 		}
 	}
 
@@ -158,26 +158,29 @@ int main(int argc, char *argv[]) {
 	fp1 = fopen(argv[1], "r");
 	if (fp1 == NULL) 
 	{
-	    printf("Errore: Impossibile aprire il file.\n");
-	    return 1; // Termina con codice di errore
+		printf("Errore: Impossibile aprire il file.\n");
+		return -1; // Termina con codice di errore
 	}
 
-	printf("%s\n",get_pid_from_list(session_pid));
 	// PRINT linea dell'elemento della lista con il pid foundpid
+	// printf("%s\n",get_pid_from_list(session_pid));
+
+	printf("%s\n",start_pid_session_line);
 
 	while ((read = getline(&log_line, &len, fp1)) != -1) 
 	{
-	    // stampo se trovo la sessione mail o quella amavis
+	
+	    // print  se trovo la sessione mail o quella amavis
 	    found_session = strstr(log_line, session_id);
 	    found_amavis_session = strstr(log_line, amavis_id);
-	    found_pid_session = strstr(log_line, session_pid);
+	    // NO usare la linea iniziale e quella finale       found_pid_session = strstr(log_line, session_pid);
 
 	    if ( (found_session!=NULL) || (found_amavis_session!=NULL)||(found_pid_session!=NULL))
 	            printf("OUTPUT: %s", log_line);
 	}
 
 	// PRINT  della linea finale copiata sopra 
-	printf("%s\n",close_session_line);
+	printf("%s\n",close_pid_session_line);
 
 	fclose(fp1);
 	free(log_line);

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-char *returnstring = "PIDFINALE";
+char *returnstring = "PIDRETURNEDFROM get_pid_from_list";
 
 int add_pid_to_list(char *,char *)
 { 
@@ -63,15 +63,15 @@ int delpid(char *ilpid)
 
 int get_pid(char *logline, char *ilpid )
 {
-        char *stringa_da_verificare;
-        char *token;
-        const char delimitatori[] = "[]";
+	char *stringa_da_verificare;
+	char *token;
+	const char delimitatori[] = "[]";
 
-        // preparo la stringa su cui cercare modificabile
-        if((stringa_da_verificare=strdup(logline))==NULL) {
-                printf("strdup fallito\n");
-                return false;
-        }
+	// preparo la stringa su cui cercare modificabile
+	if((stringa_da_verificare=strdup(logline))==NULL) {
+		printf("strdup fallito\n");
+		return false;
+	}
 
 
         //  split usando "[" e "]"
@@ -80,21 +80,21 @@ int get_pid(char *logline, char *ilpid )
                 free(stringa_da_verificare);
                 return false;
         }
-        printf ("debug: primo token: \"%s\"\n",token);
+	//printf ("debug: primo token: \"%s\"\n",token);
 
 
-        if((token = strtok(NULL, delimitatori))==NULL) {
-                printf("nom trovo secondo token\n");
-                free(stringa_da_verificare);
-                return false;
-        }
+	if((token = strtok(NULL, delimitatori))==NULL) {
+		printf("nom trovo secondo token\n");
+		free(stringa_da_verificare);
+		return false;
+	}
 
 
         // copio il token nella stringa ilpid
         strncpy(ilpid, token, sizeof(ilpid) - 1);
         ilpid[sizeof(ilpid) - 1] = '\0';
 
-        printf ("debug: il secondo token che deve essere il pid: \"%s\"\n",token);
+        // printf ("debug: il secondo token che deve essere il pid: \"%s\"\n",token);
 
 
         // copio il token nella stringa preparata nel main usando il suo puntatore

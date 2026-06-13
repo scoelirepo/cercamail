@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 		*position, 
 		*found_session, 
 		*found_amavis_session, 
-		*found_pid_session, 
+		*found_pid_session=NULL, 
 		found_pid[20]; 
 	size_t len = 0; // boh!
 	ssize_t read;  // dimensione stringa letta
@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
 	    // print  se trovo la sessione mail o quella amavis
 	    found_session = strstr(log_line, session_id);
 	    found_amavis_session = strstr(log_line, amavis_id);
-	    // NO usare la linea iniziale e quella finale       found_pid_session = strstr(log_line, session_pid);
+	    //   found_pid_session = strstr(log_line, session_pid);
 
 	    if ( (found_session!=NULL) || (found_amavis_session!=NULL)||(found_pid_session!=NULL))
 	            printf("OUTPUT: %s", log_line);
